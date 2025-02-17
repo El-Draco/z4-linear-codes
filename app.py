@@ -118,7 +118,7 @@ st.write(G)
 # Compute Codewords
 C = generate_codewords(G)
 C_dual = dual_code(G)
-if st.button("Check if Linear Code"):
+if st.button("Compute Metrics"):
     if not is_full_rank(G):
         st.warning("Warning: The generator matrix is not full-rank. This may produce a degenerate code.")
     
