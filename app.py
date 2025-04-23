@@ -6,13 +6,17 @@ from sklearn.decomposition import PCA
 from sympy import symbols, expand
 from stdform import z4_standard_form
 
-
 # Define weight functions for Z4
 hamming_weights = {0: 0, 1: 1, 2: 1, 3: 1}
 lee_weights = {0: 0, 1: 1, 2: 2, 3: 1}
 euclidean_weights = {0: 0, 1: 1, 2: 4, 3: 1}
 
-# Function to generate codewords
+def min_hamming_distance_binary(C_bin):
+    def hamming_dist(u, v):
+        return sum(ui != vi for ui, vi in zip(u, v))
+    distances = [hamming_dist(u, v) for u, v in product(C_bin, repeat=2) if u != v]
+    return min(distances) if distances else 0
+
 
 # Function to apply the Gray map to a codeword
 def gray_map(codeword):
@@ -141,6 +145,15 @@ if st.button("Compute Metrics"):
         C, C_gray = generate_gray_mapped_codewords(G)
         st.write(r"### Gray-Mapped Codewords:")
         st.write("\n".join([f"[{', '.join(map(str, c))}]" for c in C_gray]))
+
+        # Count codewords
+        st.write(f"### Number of Gray-Mapped Codewords: {len(C_gray)}")
+
+        # Compute minimum Hamming distance for Gray image
+        gray_hamming_dist = min_hamming_distance_binary(C_gray)
+
+        st.metric(label="Hamming Distance (Gray Image)", value=gray_hamming_dist)
+
 
         # Row 1: Show Generator Matrix & Standard Form Matrix
         col3, col4 = st.columns(2)
